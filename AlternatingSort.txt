@@ -1,0 +1,57 @@
+public class AlternatingSort {
+	private static Object lock = new Object();  
+	  
+    private static int i = 1; 
+	
+	public static void main(String[] args) {
+		
+		 Thread thread1 = new Thread() {  
+	            public void run() {  
+	                while (i <= 52) {  
+	                	//对lock这一对象加锁，让这一段代码同步
+	                    synchronized (lock) {  
+	                        if (i % 2 == 1) {  
+	                            System.out.println("thread1  " + (i+1)/2);  
+	                            i++;
+	                        } else {  
+	                            lock.notifyAll();  
+	                            try {  
+	                                lock.wait();  
+	                            } catch (InterruptedException e) {  
+	                                e.printStackTrace();  
+	                            }  
+	                        }  
+	                    }  
+	  
+	                }  
+	            }  
+	        };  
+	  
+	        Thread thread2 = new Thread() {  
+	            public void run() {  
+	            
+	            	 while (i <= 52) {  
+	                    synchronized (lock) {  
+	                        if (i % 2 == 0) {  
+	                            System.out.println("thread2  " + (char)('a'+ (i-2)/2));  
+	                            i++;
+	                        } else {  
+	                            lock.notifyAll();  
+	                            try {  
+	                                lock.wait();  
+	                            } catch (InterruptedException e) {  
+	                                e.printStackTrace();  
+	                            }  
+	                        }  
+	                    }  
+	  
+	                }  
+	            }  
+	        };  
+	            	
+	                
+	        thread1.start();  
+	        thread2.start();  
+	}
+
+}
